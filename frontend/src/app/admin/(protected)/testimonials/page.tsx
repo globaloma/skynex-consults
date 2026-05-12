@@ -7,9 +7,12 @@ import { getManagedTestimonials } from "@/lib/cms/testimonials";
 import { PublishToggleForm } from "@/components/admin/publish-toggle-form";
 import { DeleteItemForm } from "@/components/admin/delete-item-form";
 import { deleteTestimonial } from "@/app/admin/cms-actions";
+import { Database } from "@/types/supabase";
+
+type Testimonial = Database["public"]["Tables"]["testimonials"]["Row"];
 
 export default async function AdminTestimonialsPage() {
-  const testimonials = await getManagedTestimonials();
+  const testimonials = (await getManagedTestimonials()) as Testimonial[];
 
   return (
     <div>
