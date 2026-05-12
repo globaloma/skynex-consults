@@ -4,12 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/shared/animated-section";
 import { AnimatedStagger, AnimatedItem } from "@/components/shared/animated-stagger";
 import { getPublishedTestimonials } from "@/lib/cms/testimonials";
+import type { Database } from "@/types/supabase";
+
+type Testimonial = Database["public"]["Tables"]["testimonials"]["Row"];
 
 export async function Testimonials() {
   let items = TESTIMONIALS;
 
   try {
-    const dbTestimonials = await getPublishedTestimonials();
+    const dbTestimonials = (await getPublishedTestimonials()) as Testimonial[];
     if (dbTestimonials.length > 0) {
       items = dbTestimonials.map((item) => ({
         name: item.role ? `${item.name}, ${item.role}` : item.name,
