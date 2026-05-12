@@ -5,6 +5,9 @@ import { revalidatePath } from "next/cache";
 import { createServerSupabase, createServiceRoleSupabase } from "@/lib/supabase/server";
 import { resend } from "@/lib/resend";
 import { bookingStatusUpdatedTemplate } from "@/lib/resend/status-template";
+import type { Database } from "@/types/supabase";
+
+type Booking = Database["public"]["Tables"]["bookings"]["Row"];
 
 export async function loginAdmin(formData: FormData) {
   const email = String(formData.get("email") || "");
@@ -42,18 +45,20 @@ export async function updateBookingStatus(formData: FormData) {
 
   const supabase = createServiceRoleSupabase();
 
-  const { data: booking, error: fetchError } = await supabase
+  const { data, error: fetchError } = await supabase
     .from("bookings")
     .select("*")
     .eq("id", id)
     .single();
 
-  if (fetchError || !booking) {
+  if (fetchError || !data) {
     return { error: fetchError?.message || "Booking not found" };
   }
 
-  const { error } = await supabase
-    .from("bookings")
+  const booking = data as Booking;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("bookings") as any)
     .update({ status })
     .eq("id", id);
 
