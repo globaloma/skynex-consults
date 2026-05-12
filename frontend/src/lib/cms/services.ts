@@ -5,6 +5,7 @@ export type ManagedService = {
   slug: string;
   title: string;
   headline: string;
+  short_description: string;
   description: string;
   who_its_for: string;
   outcomes: string[];
