@@ -7,11 +7,11 @@ import { BookingStatusForm } from "@/components/admin/booking-status-form";
 import { BookingsFilters } from "@/components/admin/bookings-filters";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
+import { Database } from "@/types/supabase";
 type Props = {
   searchParams: Promise<{ status?: string }>;
 };
-
+type Booking = Database["public"]["Tables"]["bookings"]["Row"];
 export default async function AdminBookingsPage({ searchParams }: Props) {
   const params = await searchParams;
   const status = params.status || "all";
@@ -27,7 +27,9 @@ export default async function AdminBookingsPage({ searchParams }: Props) {
     query = query.eq("status", status);
   }
 
-  const { data: bookings } = await query;
+  const { data } = await query;
+
+const bookings: Booking[] = data ?? [];
 
   return (
     <div>
