@@ -16,7 +16,8 @@ function slugify(value: string) {
 const ACTOR_EMAIL = "system@skynexconsult.com";
 
 export async function createBlogPost(formData: FormData) {
-  const supabase = createServiceRoleSupabase();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceRoleSupabase() as any;
 
   const title = String(formData.get("title") || "");
   const slug = slugify(String(formData.get("slug") || title));
@@ -58,7 +59,8 @@ export async function createBlogPost(formData: FormData) {
 }
 
 export async function updateBlogPost(formData: FormData) {
-  const supabase = createServiceRoleSupabase();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceRoleSupabase() as any;
 
   const id = String(formData.get("id") || "");
   const title = String(formData.get("title") || "");
@@ -120,7 +122,8 @@ export async function deleteBlogPost(formData: FormData) {
 }
 
 export async function createTestimonial(formData: FormData) {
-  const supabase = createServiceRoleSupabase();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceRoleSupabase() as any;
 
   const name = String(formData.get("name") || "");
   const role = String(formData.get("role") || "");
@@ -156,7 +159,8 @@ export async function createTestimonial(formData: FormData) {
 }
 
 export async function updateTestimonial(formData: FormData) {
-  const supabase = createServiceRoleSupabase();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceRoleSupabase() as any;
 
   const id = String(formData.get("id") || "");
   const name = String(formData.get("name") || "");
@@ -212,7 +216,8 @@ export async function deleteTestimonial(formData: FormData) {
 }
 
 export async function createManagedService(formData: FormData) {
-  const supabase = createServiceRoleSupabase();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceRoleSupabase() as any;
 
   const title = String(formData.get("title") || "");
   const slug = slugify(String(formData.get("slug") || title));
@@ -261,7 +266,8 @@ export async function createManagedService(formData: FormData) {
 }
 
 export async function updateManagedService(formData: FormData) {
-  const supabase = createServiceRoleSupabase();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceRoleSupabase() as any;
 
   const id = String(formData.get("id") || "");
   const title = String(formData.get("title") || "");
@@ -334,7 +340,8 @@ export async function deleteManagedService(formData: FormData) {
 }
 
 export async function togglePublishedState(formData: FormData) {
-  const supabase = createServiceRoleSupabase();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createServiceRoleSupabase() as any;
 
   const table = String(formData.get("table") || "");
   const id = String(formData.get("id") || "");
@@ -345,7 +352,7 @@ export async function togglePublishedState(formData: FormData) {
   }
 
   const { error } = await supabase
-    .from(table as "blog_posts" | "testimonials" | "managed_services")
+    .from(table)
     .update({
       published: !published,
       updated_at: new Date().toISOString(),
