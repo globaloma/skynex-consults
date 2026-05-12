@@ -26,13 +26,23 @@ type Props = {
   }>;
 };
 
+type Post = {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  author: string;
+  date: string;
+  cover_image?: string | null;
+};
+
 export default async function InsightsPage({ searchParams }: Props) {
   const params = await searchParams;
   const page = Number(params.page || 1);
   const category = params.category || "All";
   const search = params.search || "";
 
-  let posts = getAllPosts();
+  let posts: Post[] = getAllPosts();
   let totalPages = 1;
   let currentPage = 1;
   let categories = ["All"];
@@ -99,7 +109,7 @@ export default async function InsightsPage({ searchParams }: Props) {
                 {posts.map((post) => (
                   <Link key={post.slug} href={`/insights/${post.slug}`}>
                     <Card className="h-full overflow-hidden transition hover:-translate-y-1">
-                      {"cover_image" in post && post.cover_image ? (
+                      {post.cover_image ? (
                         <div className="relative h-48 w-full">
                           <Image
                             src={post.cover_image}
