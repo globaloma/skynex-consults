@@ -13,7 +13,7 @@ export async function logAuditEvent({
   entityId?: string | null;
   metadata?: Record<string, unknown>;
 }) {
-  const supabase = createServiceRoleSupabase();
+  const supabase = createServiceRoleSupabase() as any;
 
   await supabase.from("audit_logs").insert({
     actor_email: actorEmail,

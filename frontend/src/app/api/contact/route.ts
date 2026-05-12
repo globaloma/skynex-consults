@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabase = createServiceRoleSupabase();
+    const supabase = createServiceRoleSupabase() as any;
 
     const { error } = await supabase.from("contact_messages").insert({
       name: parsed.data.name,
