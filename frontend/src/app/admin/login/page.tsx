@@ -1,9 +1,8 @@
+// src/app/admin/login/page.tsx
 import { redirect } from "next/navigation";
-import { loginAdmin } from "@/app/admin/actions";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { LoginForm } from "@/components/admin/login-form";
 
 export default async function AdminLoginPage() {
   const supabase = await createServerSupabase();
@@ -29,21 +28,7 @@ export default async function AdminLoginPage() {
               </p>
             </div>
 
-            <form action={loginAdmin} className="grid gap-5">
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-text-primary">Email</label>
-                <Input name="email" type="email" required />
-              </div>
-
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-text-primary">Password</label>
-                <Input name="password" type="password" required />
-              </div>
-
-              <Button type="submit" className="w-full">
-                Sign In
-              </Button>
-            </form>
+            <LoginForm />
           </CardContent>
         </Card>
       </div>
