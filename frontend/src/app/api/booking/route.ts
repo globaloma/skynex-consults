@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabase = createServiceRoleSupabase();
+    const supabase = createServiceRoleSupabase() as any;
 
     const { data: inserted, error } = await supabase
       .from("bookings")
