@@ -1,0 +1,11 @@
+Configure Supabase
+Configure Resend
+Configure Vercel env vars
+Upload assets to /public
+Run seeds
+Test forms
+Test admin
+Deploy
+Connect domain
+Run QA checklist
+Launch

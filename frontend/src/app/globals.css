@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-text-body antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading text-text-primary;
+}
+
+.section-padding {
+  @apply py-16 md:py-20 lg:py-24;
+}
+
+.container-max {
+  @apply container;
+}
+
+.prose-custom h2,
+.prose-custom h3 {
+  @apply font-heading text-text-primary;
+}
+
+.prose-custom p,
+.prose-custom li {
+  @apply text-text-body leading-7;
+}
