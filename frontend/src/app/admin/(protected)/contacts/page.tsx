@@ -3,15 +3,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { createServiceRoleSupabase } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import { TableEmpty } from "@/components/admin/table-empty";
+import { Database } from "@/types/supabase";
 
+type ContactMessage = Database["public"]["Tables"]["contact_messages"]["Row"];
 export default async function AdminContactsPage() {
   const supabase = createServiceRoleSupabase();
 
-  const { data: contacts } = await supabase
+  const { data } = await supabase
     .from("contact_messages")
     .select("*")
     .order("created_at", { ascending: false });
 
+    const contacts = (data ?? []) as ContactMessage[];
   return (
     <div>
       <AdminHeader
