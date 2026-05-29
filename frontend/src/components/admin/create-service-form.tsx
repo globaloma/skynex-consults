@@ -5,7 +5,7 @@ import { createManagedService } from "@/app/admin/cms-actions";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/sonner";
-import { ImageUploadField } from "@/components/admin/image-upload-field";
+// import { ImageUploadField } from "@/components/admin/image-upload-field";
 
 export function CreateServiceForm() {
   const [pending, startTransition] = useTransition();
@@ -40,7 +40,7 @@ export function CreateServiceForm() {
         <Input name="headline" required />
       </Field>
 
-      <ImageUploadField name="cover_image" label="Cover Image" />
+      {/* <ImageUploadField name="cover_image" label="Cover Image" /> */}
 
       <Field label="Short Description">
         <Textarea name="short_description" required />

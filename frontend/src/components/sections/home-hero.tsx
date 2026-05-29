@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import { CTA_LABELS, SITE_CONFIG } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -9,74 +9,82 @@ import { fadeUp, staggerContainer } from "@/lib/animations";
 
 export function HomeHero() {
   return (
-    <section className="relative overflow-hidden bg-brand-600 text-white">
-      <div className="absolute inset-0 bg-hero-grid bg-grid opacity-20" />
-      <div className="container-max relative py-20 md:py-28 lg:py-32">
+    <section className="relative min-h-[85vh] overflow-hidden">
+      {/* Full bleed background image */}
+      <Image
+        src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?q=80&w=2070&auto=format&fit=crop"
+        alt="Strategic planning environment"
+        fill
+        className="object-cover"
+        priority
+      />
+
+      {/* Dark gradient overlay - ensures text remains readable */}
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-900/95 via-brand-800/90 to-black/85" />
+
+      {/* Content Layer */}
+      <div className="container-max relative z-10 flex min-h-[85vh] items-center justify-center">
         <motion.div
-          className="grid items-center gap-12 lg:grid-cols-2"
+          className="mx-auto max-w-3xl px-4 text-center"
           initial="hidden"
           animate="show"
           variants={staggerContainer}
         >
-          <motion.div className="max-w-2xl" variants={fadeUp}>
-            <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-brand-100">
-              {SITE_CONFIG.tagline}
-            </p>
-            <h1 className="font-heading text-4xl font-semibold leading-tight text-white md:text-5xl lg:text-6xl">
-              Strategic consulting for businesses ready to grow with confidence.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-white/85">
-              Skynex Consults supports startups, SMEs, and business owners with
-              strategy, planning, branding, digital presence, and growth advisory
-              designed to drive better decisions.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/booking">
-                <Button className="bg-white text-brand-700 hover:bg-brand-50">
-                  {CTA_LABELS.primary}
-                </Button>
-              </Link>
-              <Link href="/services">
-                <Button
-                  variant="secondary"
-                  className="border-white text-white hover:bg-white/10"
-                >
-                  {CTA_LABELS.secondary}
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur"
+          {/* Eyebrow text */}
+          <motion.p
+            className="mb-5 text-sm font-medium uppercase tracking-[0.25em] text-brand-200"
             variants={fadeUp}
           >
-            <div className="grid gap-6 sm:grid-cols-2">
-              {[
-                "Business Strategy",
-                "Growth Planning",
-                "Brand Positioning",
-                "Digital Presence",
-              ].map((item) => (
-                <div key={item} className="rounded-2xl bg-white/10 p-5">
-                  <h3 className="font-heading text-lg font-semibold text-white">
-                    {item}
-                  </h3>
-                  <p className="mt-2 text-sm text-white/80">
-                    Practical, tailored support that helps businesses move with direction.
-                  </p>
-                </div>
-              ))}
-            </div>
+            {SITE_CONFIG.tagline}
+          </motion.p>
 
-            <div className="mt-6 flex items-center gap-2 text-sm text-brand-100">
-              <span>
-                Trusted support for founders, SMEs, and growth-focused businesses
-              </span>
-              <ArrowRight className="h-4 w-4" />
-            </div>
+          {/* Main headline */}
+          <motion.h1
+            className="font-heading text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl"
+            variants={fadeUp}
+          >
+            Strategic consulting for businesses ready to grow with confidence.
+          </motion.h1>
+
+          {/* Subtext description */}
+          <motion.p
+            className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-300 md:text-xl"
+            variants={fadeUp}
+          >
+            Skynex Consults supports startups, SMEs, and business owners with
+            strategy, planning, branding, digital presence, and growth advisory
+            designed to drive better decisions.
+          </motion.p>
+
+          {/* CTAs - stacked center */}
+          <motion.div
+            className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
+            variants={fadeUp}
+          >
+            <Link href="/booking">
+              <Button size="lg" className="bg-white px-8 text-brand-800 hover:bg-gray-100 shadow-lg transition-all hover:shadow-xl">
+                {CTA_LABELS.primary}
+              </Button>
+            </Link>
+
+            <Link href="/services">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="border-white/30 bg-transparent px-8 text-white backdrop-blur-sm hover:bg-white/10"
+              >
+                {CTA_LABELS.secondary}
+              </Button>
+            </Link>
           </motion.div>
+
+          {/* Trust indicator - subtle and grounded */}
+          <motion.p
+            className="mt-12 hidden text-sm font-light italic tracking-wide text-white/40 md:block"
+            variants={fadeUp}
+          >
+            Trusted by founders, SMEs, and growth-focused businesses across Nigeria
+          </motion.p>
         </motion.div>
       </div>
     </section>

@@ -1,33 +1,14 @@
 import Link from "next/link";
-import { COMPANY_INFO, CTA_LABELS, FOOTER_LINKS, SITE_CONFIG, SOCIAL_LINKS } from "@/lib/constants";
-import { Button } from "@/components/ui/button";
+import { COMPANY_INFO, FOOTER_LINKS, SITE_CONFIG, SOCIAL_LINKS } from "@/lib/constants";
+import { LogoDark } from "../shared/logo-dark";
 
 export function Footer() {
   return (
     <footer className="bg-brand-600 text-white">
       <div className="container-max py-14">
-        <div className="mb-10 flex flex-col gap-6 rounded-2xl border border-white/10 bg-white/5 p-8 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h3 className="font-heading text-2xl font-semibold text-white">
-              Ready to grow your business with clarity?
-            </h3>
-            <p className="mt-2 max-w-2xl text-sm text-white/80">
-              Book a consultation with Skynex Consults and take the next
-              strategic step with confidence.
-            </p>
-          </div>
-          <Link href="/booking">
-            <Button className="bg-white text-brand-700 hover:bg-brand-50">
-              {CTA_LABELS.primary}
-            </Button>
-          </Link>
-        </div>
-
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
-            <h4 className="font-heading text-xl font-semibold">
-              {SITE_CONFIG.name}
-            </h4>
+            <LogoDark />   
             <p className="mt-3 max-w-md text-sm text-white/80">
               {SITE_CONFIG.description}
             </p>

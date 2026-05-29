@@ -52,11 +52,11 @@ export function TestimonialForm({ initialData }: Props) {
         <Input name="role" defaultValue={initialData?.role || ""} />
       </Field>
 
-      <ImageUploadField
+      {/* <ImageUploadField
         name="avatar_image"
         label="Avatar Image"
         defaultValue={initialData?.avatar_image}
-      />
+      /> */}
 
       <Field label="Quote">
         <Textarea

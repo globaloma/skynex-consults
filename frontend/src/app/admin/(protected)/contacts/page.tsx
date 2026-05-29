@@ -37,6 +37,7 @@ export default async function AdminContactsPage() {
                     <tr className="border-b border-borderSoft">
                       <th className="pb-3 font-medium text-text-muted">Name</th>
                       <th className="pb-3 font-medium text-text-muted">Email</th>
+                      <th className="pb-3 font-medium text-text-muted">Phone</th>
                       <th className="pb-3 font-medium text-text-muted">Message</th>
                       <th className="pb-3 font-medium text-text-muted">Date</th>
                     </tr>
@@ -46,6 +47,7 @@ export default async function AdminContactsPage() {
                       <tr key={contact.id} className="border-b border-borderSoft">
                         <td className="py-4 text-text-primary">{contact.name}</td>
                         <td className="py-4 text-text-body">{contact.email}</td>
+                        <td className="py-4 text-text-body">{contact.phone}</td>
                         <td className="py-4 text-text-body">{contact.message}</td>
                         <td className="py-4 text-text-body">
                           {formatDate(contact.created_at)}

@@ -29,6 +29,7 @@ export const NAV_LINKS = [
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Booking", href: "/booking" },
+  { label: "Packages", href: "/packages" },
   { label: "Insights", href: "/insights" },
   { label: "Contact", href: "/contact" },
 ];
@@ -37,6 +38,7 @@ export const FOOTER_LINKS = [
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Book a Consultation", href: "/booking" },
+  { label: "Packages", href: "/packages" },
   { label: "Insights", href: "/insights" },
   { label: "Contact", href: "/contact" },
   { label: "Privacy Policy", href: "/privacy-policy" },

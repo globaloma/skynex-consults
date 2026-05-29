@@ -22,7 +22,7 @@ export function CtaBanner({
         <div className="rounded-3xl bg-brand-600 px-6 py-10 text-white md:px-10 md:py-14">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="max-w-2xl">
-              <h3 className="font-heading text-2xl font-semibold md:text-3xl">
+              <h3 className="font-heading text-2xl font-semibold md:text-3xl text-white">
                 {title}
               </h3>
               <p className="mt-3 text-white/80">{description}</p>
