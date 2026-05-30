@@ -11,9 +11,9 @@ export const SITE_CONFIG = {
 };
 
 export const COMPANY_INFO = {
-  email: "info@skynexconsult.com",
-  phone: "+234 800 000 0000",
-  whatsapp: "+2348000000000",
+  email: "info@skynexconsults.com",
+  phone: "+2348139703852",
+  whatsapp: "+2348139703852",
   address: "Lagos, Nigeria",
   officeHours: "Mon - Fri, 9:00 AM - 5:00 PM",
 };
