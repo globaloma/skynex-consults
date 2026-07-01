@@ -6,7 +6,7 @@ export const SITE_CONFIG = {
   tagline: "Clarity in Every Decision",
   description:
     "Strategy-led consulting for startups, SMEs, and business owners seeking growth, clarity, and execution support.",
-  url: process.env.NEXT_PUBLIC_SITE_URL,
+  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   ogImage: "/og-image.jpg",
 };
 
