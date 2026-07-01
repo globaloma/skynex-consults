@@ -2,7 +2,7 @@ export type Package = {
   id: string;
   name: string;
   subtitle: string;
-  priceRange: string;
+  price: string;
   amount: number; // base amount in kobo
   description: string;
   features: string[];
@@ -15,8 +15,8 @@ export const PACKAGES: Package[] = [
     id: "starter-consult",
     name: "Starter Consult",
     subtitle: "Idea-to-Business Package",
-    priceRange: "₦75k – ₦120k",
-    amount: 75000 * 100,
+    price: "₦100,000",
+    amount: 100000 * 100,
     description:
       "For students, NYSC entrepreneurs, side hustlers & first-time founders ready to transform an idea into a real business.",
     features: [
@@ -33,8 +33,8 @@ export const PACKAGES: Package[] = [
     id: "business-growth",
     name: "Business Growth",
     subtitle: "SME Structuring Package",
-    priceRange: "₦180k – ₦300k",
-    amount: 180000 * 100,
+    price: "₦250,000",
+    amount: 250000 * 100,
     description:
       "For existing SMEs, business owners scaling or restructuring, and entrepreneurs needing structured growth.",
     features: [
@@ -56,8 +56,8 @@ export const PACKAGES: Package[] = [
     id: "startup-accelerator",
     name: "Startup Accelerator",
     subtitle: "Launch & Scale Package",
-    priceRange: "₦350k – ₦650k",
-    amount: 350000 * 100,
+    price: "₦500,000",
+    amount: 500000 * 100,
     description:
       "For serious startups and founders building investor-ready businesses.",
     features: [
@@ -80,8 +80,8 @@ export const PACKAGES: Package[] = [
     id: "visionary-elite",
     name: "Visionary Elite",
     subtitle: "Executive Consulting Retainer",
-    priceRange: "₦800k – ₦2.5M+",
-    amount: 800000 * 100,
+    price: "₦1.5M",
+    amount: 1500000 * 100,
     description:
       "For established brands and founders scaling aggressively.",
     features: [

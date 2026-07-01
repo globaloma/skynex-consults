@@ -82,11 +82,11 @@ export function BlogForm({ initialData }: Props) {
         </Field>
       </div>
 
-      <ImageUploadField
+      {/* <ImageUploadField
         name="cover_image"
         label="Cover Image"
         defaultValue={initialData?.cover_image}
-      />
+      /> */}
 
       <div className="grid gap-2">
         <label className="text-sm font-medium text-text-primary">Content</label>

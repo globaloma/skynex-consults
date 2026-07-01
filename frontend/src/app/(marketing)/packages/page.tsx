@@ -49,7 +49,7 @@ export default function PackagesPage() {
 
               {/* Price */}
               <p className="mt-4 text-2xl font-bold text-brand-700">
-                {pkg.priceRange}
+                {pkg.price}
               </p>
 
               {/* Description */}
