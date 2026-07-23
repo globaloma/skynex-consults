@@ -7,9 +7,13 @@ import { PublishToggleForm } from "@/components/admin/publish-toggle-form";
 import { Button } from "@/components/ui/button";
 import { DeleteItemForm } from "@/components/admin/delete-item-form";
 import { deleteManagedService } from "@/app/admin/cms-actions";
+import { canEditContent } from "@/lib/admin-auth";
 
 export default async function AdminServicesPage() {
-  const services = await getManagedServices();
+  const [services, canEdit] = await Promise.all([
+    getManagedServices(),
+    canEditContent(),
+  ]);
 
   return (
     <div>
@@ -19,11 +23,13 @@ export default async function AdminServicesPage() {
       />
 
       <div className="p-6">
-        <div className="mb-6">
-          <Link href="/admin/services/new">
-            <Button>Create Service</Button>
-          </Link>
-        </div>
+        {canEdit ? (
+          <div className="mb-6">
+            <Link href="/admin/services/new">
+              <Button>Create Service</Button>
+            </Link>
+          </div>
+        ) : null}
 
         <Card>
           <CardContent>
@@ -61,19 +67,23 @@ export default async function AdminServicesPage() {
                         </td>
                         <td className="py-4">
                           <div className="flex gap-2">
-                            <Link href={`/admin/services/${service.id}/edit`}>
-                              <Button variant="secondary" size="sm">
-                                Edit
-                              </Button>
-                            </Link>
+                            {canEdit ? (
+                              <Link href={`/admin/services/${service.id}/edit`}>
+                                <Button variant="secondary" size="sm">
+                                  Edit
+                                </Button>
+                              </Link>
+                            ) : null}
                             <PublishToggleForm
                               id={service.id}
                               table="managed_services"
                               published={service.published}
+                              canEdit={canEdit}
                             />
                             <DeleteItemForm
                               id={service.id}
                               action={deleteManagedService}
+                              canEdit={canEdit}
                             />
                           </div>
                         </td>

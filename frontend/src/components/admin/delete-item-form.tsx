@@ -7,12 +7,16 @@ export function DeleteItemForm({
   id,
   action,
   label = "Delete",
+  canEdit = true,
 }: {
   id: string;
   action: (formData: FormData) => Promise<{ error?: string; success?: boolean } | void>;
   label?: string;
+  canEdit?: boolean;
 }) {
   const [pending, startTransition] = useTransition();
+
+  if (!canEdit) return null;
 
   return (
     <form

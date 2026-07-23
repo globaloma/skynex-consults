@@ -8,12 +8,16 @@ export function PublishToggleForm({
   id,
   table,
   published,
+  canEdit = true,
 }: {
   id: string;
-  table: "blog_posts" | "testimonials" | "managed_services";
+  table: "blog_posts" | "testimonials" | "managed_services" | "packages";
   published: boolean;
+  canEdit?: boolean;
 }) {
   const [pending, startTransition] = useTransition();
+
+  if (!canEdit) return null;
 
   return (
     <form

@@ -1,4 +1,4 @@
-import { COMPANY_INFO, SOCIAL_LINKS } from "@/lib/constants";
+import { COMPANY_INFO } from "@/lib/constants";
 import { createMetadata } from "@/lib/metadata";
 import { PageHero } from "@/components/shared/page-hero";
 import { ContactForm } from "@/components/forms/contact-form";
@@ -11,8 +11,10 @@ import {
   MessageCircle,
   Linkedin,
   Instagram,
-  Twitter,
+  Facebook,
 } from "lucide-react";
+import { XIcon, TikTokIcon } from "@/components/shared/social-icons";
+import { getSiteSettings } from "@/lib/cms/settings";
 
 export const metadata = createMetadata({
   title: "Contact",
@@ -21,7 +23,19 @@ export const metadata = createMetadata({
   path: "/contact",
 });
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getSiteSettings();
+
+  const socialLinks = [
+    { href: settings.facebook_url, label: "Facebook", icon: Facebook },
+    { href: settings.instagram_url, label: "Instagram", icon: Instagram },
+    { href: settings.x_url, label: "X", icon: XIcon },
+    { href: settings.tiktok_url, label: "TikTok", icon: TikTokIcon },
+    { href: settings.linkedin_url, label: "LinkedIn", icon: Linkedin },
+  ].filter((link): link is { href: string; label: string; icon: typeof Facebook } =>
+    Boolean(link.href)
+  );
+
   return (
     <>
       <PageHero
@@ -144,44 +158,33 @@ export default function ContactPage() {
             </Card>
 
             {/* Social Media */}
-            <Card className="shadow-sm border border-brand-100">
-              <CardContent>
-                <h3 className="font-heading text-xl font-semibold">
-                  Social Media
-                </h3>
+            {socialLinks.length > 0 ? (
+              <Card className="shadow-sm border border-brand-100">
+                <CardContent>
+                  <h3 className="font-heading text-xl font-semibold">
+                    Social Media
+                  </h3>
 
-                <div className="mt-6 space-y-4 text-sm">
-                  <a
-                    href={SOCIAL_LINKS.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-3 text-brand-600 hover:text-brand-700 transition"
-                  >
-                    <Linkedin className="h-5 w-5" />
-                    LinkedIn
-                  </a>
-
-                  <a
-                    href={SOCIAL_LINKS.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-3 text-brand-600 hover:text-brand-700 transition"
-                  >
-                    <Instagram className="h-5 w-5" />
-                    Instagram
-                  </a>
-
-                  <a
-                    href={SOCIAL_LINKS.x}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-3 text-brand-600 hover:text-brand-700 transition"
-                  >
-                    <Twitter className="h-5 w-5" />X
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="mt-6 space-y-4 text-sm">
+                    {socialLinks.map((link) => {
+                      const Icon = link.icon;
+                      return (
+                        <a
+                          key={link.label}
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-3 text-brand-600 hover:text-brand-700 transition"
+                        >
+                          <Icon className="h-5 w-5" />
+                          {link.label}
+                        </a>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            ) : null}
           </div>
         </div>
       </section>

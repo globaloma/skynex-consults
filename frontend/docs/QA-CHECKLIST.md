@@ -35,4 +35,11 @@
 ## Admin
 - [ ] Admin login works
 - [ ] Admin protected routes work
-- [ ] Dashboard loads
+- [ ] Dashboard loads with charts and recent activity
+- [ ] Bookings search and pagination work
+- [ ] Contacts search, archive, and pagination work
+- [ ] Packages CRUD works and reflects on the public packages page
+- [ ] Site Settings social links show/hide correctly on the public footer
+- [ ] Viewer-role accounts cannot create, edit, delete, or publish
+- [ ] Only admin-role accounts can access Team management
+- [ ] Mobile sidebar opens and closes smoothly

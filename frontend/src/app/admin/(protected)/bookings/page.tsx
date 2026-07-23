@@ -1,35 +1,30 @@
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Card, CardContent } from "@/components/ui/card";
-import { createServiceRoleSupabase } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import { TableEmpty } from "@/components/admin/table-empty";
 import { BookingStatusForm } from "@/components/admin/booking-status-form";
 import { BookingsFilters } from "@/components/admin/bookings-filters";
+import { SearchInput } from "@/components/shared/search-input";
+import { PaginationControls } from "@/components/shared/pagination-controls";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Database } from "@/types/supabase";
+import { canEditContent } from "@/lib/admin-auth";
+import { getPaginatedBookings } from "@/lib/cms/queries";
+
 type Props = {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; search?: string; page?: string }>;
 };
-type Booking = Database["public"]["Tables"]["bookings"]["Row"];
+
 export default async function AdminBookingsPage({ searchParams }: Props) {
   const params = await searchParams;
   const status = params.status || "all";
+  const search = params.search || "";
+  const page = Number(params.page || 1) || 1;
 
-  const supabase = createServiceRoleSupabase();
-
-  let query = supabase
-    .from("bookings")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (status !== "all") {
-    query = query.eq("status", status);
-  }
-
-  const { data } = await query;
-
-const bookings: Booking[] = data ?? [];
+  const [{ data: bookings, totalPages, currentPage }, canEdit] = await Promise.all([
+    getPaginatedBookings({ page, limit: 10, status, search }),
+    canEditContent(),
+  ]);
 
   return (
     <div>
@@ -46,12 +41,20 @@ const bookings: Booking[] = data ?? [];
           </Link>
         </div>
 
+        <div className="mb-6">
+          <SearchInput
+            placeholder="Search by name, email, or service..."
+            currentValue={search}
+            extraParams={status !== "all" ? { status } : {}}
+          />
+        </div>
+
         <Card>
           <CardContent>
             {!bookings || bookings.length === 0 ? (
               <TableEmpty
-                title="No bookings yet"
-                description="Consultation requests will appear here when submitted."
+                title="No bookings found"
+                description="Try a different search or status filter."
               />
             ) : (
               <div className="overflow-x-auto">
@@ -78,6 +81,7 @@ const bookings: Booking[] = data ?? [];
                           <BookingStatusForm
                             id={booking.id}
                             currentStatus={booking.status || "new"}
+                            canEdit={canEdit}
                           />
                         </td>
                       </tr>
@@ -88,6 +92,16 @@ const bookings: Booking[] = data ?? [];
             )}
           </CardContent>
         </Card>
+
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          basePath="/admin/bookings"
+          extraParams={{
+            ...(status !== "all" ? { status } : {}),
+            ...(search ? { search } : {}),
+          }}
+        />
       </div>
     </div>
   );

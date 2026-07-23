@@ -208,6 +208,7 @@ export type Database = {
           email: string;
           phone: string | null;
           message: string;
+          archived: boolean | null;
           created_at: string;
         };
         Insert: {
@@ -216,6 +217,7 @@ export type Database = {
           email: string;
           phone?: string | null;
           message: string;
+          archived?: boolean | null;
           created_at?: string;
         };
         Update: {
@@ -224,7 +226,87 @@ export type Database = {
           email?: string;
           phone?: string | null;
           message?: string;
+          archived?: boolean | null;
           created_at?: string;
+        };
+      };
+      packages: {
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          subtitle: string;
+          price_label: string;
+          amount: number;
+          description: string;
+          features: string[];
+          deliverables: string[];
+          popular: boolean;
+          published: boolean;
+          sort_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: string;
+          subtitle: string;
+          price_label: string;
+          amount: number;
+          description: string;
+          features: string[];
+          deliverables: string[];
+          popular?: boolean;
+          published?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name?: string;
+          subtitle?: string;
+          price_label?: string;
+          amount?: number;
+          description?: string;
+          features?: string[];
+          deliverables?: string[];
+          popular?: boolean;
+          published?: boolean;
+          sort_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      site_settings: {
+        Row: {
+          id: string;
+          facebook_url: string | null;
+          instagram_url: string | null;
+          x_url: string | null;
+          tiktok_url: string | null;
+          linkedin_url: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          facebook_url?: string | null;
+          instagram_url?: string | null;
+          x_url?: string | null;
+          tiktok_url?: string | null;
+          linkedin_url?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          facebook_url?: string | null;
+          instagram_url?: string | null;
+          x_url?: string | null;
+          tiktok_url?: string | null;
+          linkedin_url?: string | null;
+          updated_at?: string;
         };
       };
     };

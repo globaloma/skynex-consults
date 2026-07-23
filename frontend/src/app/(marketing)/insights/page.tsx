@@ -42,7 +42,7 @@ export default async function InsightsPage({ searchParams }: Props) {
   const category = params.category || "All";
   const search = params.search || "";
 
-  let posts: Post[] = getAllPosts();
+  let posts: Post[];
   let totalPages = 1;
   let currentPage = 1;
   let categories = ["All"];
@@ -55,23 +55,21 @@ export default async function InsightsPage({ searchParams }: Props) {
       search,
     });
 
-    const dbCategories = await getBlogCategories();
-
-    if (result.data.length > 0 || search || category !== "All") {
-      posts = result.data.map((post) => ({
-        slug: post.slug,
-        title: post.title,
-        description: post.description,
-        category: post.category,
-        author: post.author,
-        date: post.created_at,
-        cover_image: post.cover_image,
-      }));
-      totalPages = result.totalPages;
-      currentPage = result.currentPage;
-      categories = dbCategories;
-    }
-  } catch {}
+    posts = result.data.map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      description: post.description,
+      category: post.category,
+      author: post.author,
+      date: post.created_at,
+      cover_image: post.cover_image,
+    }));
+    totalPages = result.totalPages;
+    currentPage = result.currentPage;
+    categories = await getBlogCategories();
+  } catch {
+    posts = getAllPosts();
+  }
 
   return (
     <>

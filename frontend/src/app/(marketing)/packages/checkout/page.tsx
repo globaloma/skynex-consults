@@ -1,57 +1,42 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
 import { PACKAGES } from "@/lib/packages";
-import { useEffect, useState } from "react";
-import Script from "next/script";
+import { getPublishedPackageById } from "@/lib/cms/packages";
+import { CheckoutClient } from "./checkout-client";
 
-export default function CheckoutPage() {
-  const searchParams = useSearchParams();
-  const packageId = searchParams.get("package");
+type Props = {
+  searchParams: Promise<{ package?: string }>;
+};
 
-  const [scriptLoaded, setScriptLoaded] = useState(false);
+export default async function CheckoutPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const packageId = params.package;
 
-  const selectedPackage = PACKAGES.find((p) => p.id === packageId);
+  if (!packageId) return <p className="p-10 text-center">Invalid package.</p>;
 
-  useEffect(() => {
-    if (!scriptLoaded) return;
-    if (!selectedPackage) return;
+  const dbPackage = await getPublishedPackageById(packageId);
 
-    const paystack = (window as any).PaystackPop;
+  if (dbPackage) {
+    return (
+      <CheckoutClient
+        packageId={dbPackage.id}
+        packageName={dbPackage.name}
+        amount={dbPackage.amount}
+        priceLabel={dbPackage.price_label}
+      />
+    );
+  }
 
-    if (!paystack) {
-      console.error("Paystack failed to load");
-      return;
-    }
+  const staticPackage = PACKAGES.find((pkg) => pkg.id === packageId);
 
-    const handler = paystack.setup({
-      key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
-      email: "customer@example.com",
-      amount: selectedPackage.amount,
-      currency: "NGN",
-      callback: function (response: any) {
-        window.location.href = `/packages/verify?reference=${response.reference}`;
-      },
-      onClose: function () {
-        alert("Transaction cancelled.");
-      },
-    });
-
-    handler.openIframe();
-  }, [scriptLoaded, selectedPackage]);
-
-  if (!selectedPackage) return <p>Invalid package.</p>;
+  if (!staticPackage) {
+    return <p className="p-10 text-center">Invalid package.</p>;
+  }
 
   return (
-    <>
-      {/*  Load Paystack safely */}
-      <Script
-        src="https://js.paystack.co/v1/inline.js"
-        strategy="afterInteractive"
-        onLoad={() => setScriptLoaded(true)}
-      />
-
-      <p>Redirecting to payment...</p>
-    </>
+    <CheckoutClient
+      packageId={staticPackage.id}
+      packageName={staticPackage.name}
+      amount={staticPackage.amount}
+      priceLabel={staticPackage.price}
+    />
   );
 }

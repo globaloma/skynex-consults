@@ -9,22 +9,22 @@ import { AnimatedStagger, AnimatedItem } from "@/components/shared/animated-stag
 import { getPublishedServices } from "@/lib/cms/services";
 
 export async function ServicesOverview() {
-  let services = SERVICES.map((service) => ({
-    slug: service.slug,
-    title: service.title,
-    shortDescription: service.shortDescription,
-  }));
+  let services: { slug: string; title: string; shortDescription: string }[];
 
   try {
     const dbServices = await getPublishedServices();
-    if (dbServices.length > 0) {
-      services = dbServices.map((service) => ({
-        slug: service.slug,
-        title: service.title,
-        shortDescription: service.short_description,
-      }));
-    }
-  } catch {}
+    services = dbServices.map((service) => ({
+      slug: service.slug,
+      title: service.title,
+      shortDescription: service.short_description,
+    }));
+  } catch {
+    services = SERVICES.map((service) => ({
+      slug: service.slug,
+      title: service.title,
+      shortDescription: service.shortDescription,
+    }));
+  }
 
   const icons = [
     BarChart3,

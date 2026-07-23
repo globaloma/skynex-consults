@@ -9,11 +9,21 @@ const statuses = ["new", "confirmed", "completed", "cancelled"];
 export function BookingStatusForm({
   id,
   currentStatus,
+  canEdit = true,
 }: {
   id: string;
   currentStatus: string;
+  canEdit?: boolean;
 }) {
   const [pending, startTransition] = useTransition();
+
+  if (!canEdit) {
+    return (
+      <span className="rounded-full border border-borderSoft px-3 py-2 text-sm capitalize text-text-body">
+        {currentStatus}
+      </span>
+    );
+  }
 
   return (
     <form

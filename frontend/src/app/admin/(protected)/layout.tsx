@@ -13,7 +13,7 @@ export default async function AdminLayout({
     <div className="min-h-screen bg-brand-50/20">
       <div className="flex min-h-screen">
         <AdminSidebar />
-        <div className="flex-1">
+        <div className="min-w-0 flex-1 overflow-x-hidden">
           <AdminMobileNav />
           {children}
         </div>

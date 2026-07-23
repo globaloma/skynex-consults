@@ -8,11 +8,15 @@ import { PublishToggleForm } from "@/components/admin/publish-toggle-form";
 import { DeleteItemForm } from "@/components/admin/delete-item-form";
 import { deleteTestimonial } from "@/app/admin/cms-actions";
 import { Database } from "@/types/supabase";
+import { canEditContent } from "@/lib/admin-auth";
 
 type Testimonial = Database["public"]["Tables"]["testimonials"]["Row"];
 
 export default async function AdminTestimonialsPage() {
-  const testimonials = (await getManagedTestimonials()) as Testimonial[];
+  const [testimonials, canEdit] = await Promise.all([
+    getManagedTestimonials() as Promise<Testimonial[]>,
+    canEditContent(),
+  ]);
 
   return (
     <div>
@@ -22,11 +26,13 @@ export default async function AdminTestimonialsPage() {
       />
 
       <div className="p-6">
-        <div className="mb-6">
-          <Link href="/admin/testimonials/new">
-            <Button>Create Testimonial</Button>
-          </Link>
-        </div>
+        {canEdit ? (
+          <div className="mb-6">
+            <Link href="/admin/testimonials/new">
+              <Button>Create Testimonial</Button>
+            </Link>
+          </div>
+        ) : null}
 
         <Card>
           <CardContent>
@@ -62,19 +68,23 @@ export default async function AdminTestimonialsPage() {
                         </td>
                         <td className="py-4">
                           <div className="flex gap-2">
-                            <Link href={`/admin/testimonials/${item.id}/edit`}>
-                              <Button variant="secondary" size="sm">
-                                Edit
-                              </Button>
-                            </Link>
+                            {canEdit ? (
+                              <Link href={`/admin/testimonials/${item.id}/edit`}>
+                                <Button variant="secondary" size="sm">
+                                  Edit
+                                </Button>
+                              </Link>
+                            ) : null}
                             <PublishToggleForm
                               id={item.id}
                               table="testimonials"
                               published={item.published}
+                              canEdit={canEdit}
                             />
                             <DeleteItemForm
                               id={item.id}
                               action={deleteTestimonial}
+                              canEdit={canEdit}
                             />
                           </div>
                         </td>

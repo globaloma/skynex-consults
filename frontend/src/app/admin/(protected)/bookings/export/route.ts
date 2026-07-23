@@ -1,6 +1,12 @@
 import { createServiceRoleSupabase } from "@/lib/supabase/server";
+import { getAdminSession } from "@/lib/admin-auth";
 
 export async function GET() {
+  const session = await getAdminSession();
+  if (!session) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   const supabase = createServiceRoleSupabase();
 
   const { data, error } = await supabase

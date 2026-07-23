@@ -1,4 +1,5 @@
 // src/app/admin/login/page.tsx
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
@@ -20,7 +21,16 @@ export default async function AdminLoginPage() {
         <Card>
           <CardContent className="p-8">
             <div className="mb-8 text-center">
-              <h1 className="font-heading text-3xl font-semibold text-text-primary">
+              <div className="relative mx-auto h-14 w-14 overflow-hidden rounded-2xl bg-brand-600 shadow-soft">
+                <Image
+                  src="/skynex-logo.jpeg"
+                  alt="Skynex Consults"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              <h1 className="mt-5 font-heading text-3xl font-semibold text-text-primary">
                 Admin Login
               </h1>
               <p className="mt-2 text-sm text-text-muted">

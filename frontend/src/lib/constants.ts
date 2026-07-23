@@ -18,12 +18,6 @@ export const COMPANY_INFO = {
   officeHours: "Mon - Fri, 9:00 AM - 5:00 PM",
 };
 
-export const SOCIAL_LINKS = {
-  linkedin: "https://linkedin.com/company/skynexconsults",
-  instagram: "https://instagram.com/skynexconsults",
-  x: "https://x.com/skynexconsults",
-};
-
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },

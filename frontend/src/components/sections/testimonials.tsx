@@ -8,17 +8,19 @@ import type { Database } from "@/types/supabase";
 type Testimonial = Database["public"]["Tables"]["testimonials"]["Row"];
 
 export async function Testimonials() {
-  let items = TESTIMONIALS;
+  let items: { name: string; quote: string }[];
 
   try {
     const dbTestimonials = (await getPublishedTestimonials()) as Testimonial[];
-    if (dbTestimonials.length > 0) {
-      items = dbTestimonials.map((item) => ({
-        name: item.name,
-        quote: item.quote,
-      }));
-    }
-  } catch {}
+    items = dbTestimonials.map((item) => ({
+      name: item.name,
+      quote: item.quote,
+    }));
+  } catch {
+    items = TESTIMONIALS;
+  }
+
+  if (items.length === 0) return null;
 
   return (
     <section className="section-padding bg-brand-50/40">

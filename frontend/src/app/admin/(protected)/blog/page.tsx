@@ -7,9 +7,10 @@ import { TableEmpty } from "@/components/admin/table-empty";
 import { PublishToggleForm } from "@/components/admin/publish-toggle-form";
 import { DeleteItemForm } from "@/components/admin/delete-item-form";
 import { deleteBlogPost } from "@/app/admin/cms-actions";
+import { canEditContent } from "@/lib/admin-auth";
 
 export default async function AdminBlogPage() {
-  const posts = await getManagedBlogPosts();
+  const [posts, canEdit] = await Promise.all([getManagedBlogPosts(), canEditContent()]);
 
   return (
     <div>
@@ -19,11 +20,13 @@ export default async function AdminBlogPage() {
       />
 
       <div className="p-6">
-        <div className="mb-6">
-          <Link href="/admin/blog/new">
-            <Button>Create New Post</Button>
-          </Link>
-        </div>
+        {canEdit ? (
+          <div className="mb-6">
+            <Link href="/admin/blog/new">
+              <Button>Create New Post</Button>
+            </Link>
+          </div>
+        ) : null}
 
         <Card>
           <CardContent>
@@ -61,17 +64,24 @@ export default async function AdminBlogPage() {
                         </td>
                         <td className="py-4">
                           <div className="flex gap-2">
-                            <Link href={`/admin/blog/${post.id}/edit`}>
-                              <Button variant="secondary" size="sm">
-                                Edit
-                              </Button>
-                            </Link>
+                            {canEdit ? (
+                              <Link href={`/admin/blog/${post.id}/edit`}>
+                                <Button variant="secondary" size="sm">
+                                  Edit
+                                </Button>
+                              </Link>
+                            ) : null}
                             <PublishToggleForm
                               id={post.id}
                               table="blog_posts"
                               published={post.published}
+                              canEdit={canEdit}
                             />
-                            <DeleteItemForm id={post.id} action={deleteBlogPost} />
+                            <DeleteItemForm
+                              id={post.id}
+                              action={deleteBlogPost}
+                              canEdit={canEdit}
+                            />
                           </div>
                         </td>
                       </tr>

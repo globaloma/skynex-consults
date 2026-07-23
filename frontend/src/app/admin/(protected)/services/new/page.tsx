@@ -1,8 +1,11 @@
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { CreateServiceForm } from "@/components/admin/create-service-form";
+import { requireEditorPage } from "@/lib/admin-auth";
 
-export default function NewManagedServicePage() {
+export default async function NewManagedServicePage() {
+  await requireEditorPage("/admin/services");
+
   return (
     <div>
       <AdminHeader

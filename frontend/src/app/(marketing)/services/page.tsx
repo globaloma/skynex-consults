@@ -27,29 +27,28 @@ type ServiceCard = {
 };
 
 export default async function ServicesPage() {
-  let services: ServiceCard[] = SERVICES.map((service) => ({
-    slug: service.slug,
-    title: service.title,
-    headline: service.headline,
-    description: service.description,
-    whoItsFor: service.whoItsFor,
-    outcomes: service.outcomes,
-  }));
+  let services: ServiceCard[];
 
   try {
     const dbServices = await getPublishedServices();
-    if (dbServices.length > 0) {
-      services = dbServices.map((service) => ({
-        slug: service.slug,
-        title: service.title,
-        headline: service.headline,
-        description: service.description,
-        whoItsFor: service.who_its_for,
-        outcomes: service.outcomes,
-      }));
-    }
+    services = dbServices.map((service) => ({
+      slug: service.slug,
+      title: service.title,
+      headline: service.headline,
+      description: service.description,
+      whoItsFor: service.who_its_for,
+      outcomes: service.outcomes,
+    }));
   } catch (error) {
-    console.error("Failed to load services from DB:", error);
+    console.error("Failed to load services from DB, using fallback content:", error);
+    services = SERVICES.map((service) => ({
+      slug: service.slug,
+      title: service.title,
+      headline: service.headline,
+      description: service.description,
+      whoItsFor: service.whoItsFor,
+      outcomes: service.outcomes,
+    }));
   }
 
   return (

@@ -1,14 +1,23 @@
 import Link from "next/link";
-import {
-  COMPANY_INFO,
-  FOOTER_LINKS,
-  SITE_CONFIG,
-  SOCIAL_LINKS,
-} from "@/lib/constants";
+import { COMPANY_INFO, FOOTER_LINKS, SITE_CONFIG } from "@/lib/constants";
 import { LogoDark } from "../shared/logo-dark";
-import { Mail, Phone, MapPin, Linkedin, Instagram, Twitter } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Instagram, Facebook } from "lucide-react";
+import { XIcon, TikTokIcon } from "@/components/shared/social-icons";
+import { getSiteSettings } from "@/lib/cms/settings";
 
-export function Footer() {
+export async function Footer() {
+  const settings = await getSiteSettings();
+
+  const socialLinks = [
+    { href: settings.facebook_url, label: "Facebook", icon: Facebook },
+    { href: settings.instagram_url, label: "Instagram", icon: Instagram },
+    { href: settings.x_url, label: "X", icon: XIcon },
+    { href: settings.tiktok_url, label: "TikTok", icon: TikTokIcon },
+    { href: settings.linkedin_url, label: "LinkedIn", icon: Linkedin },
+  ].filter((link): link is { href: string; label: string; icon: typeof Facebook } =>
+    Boolean(link.href)
+  );
+
   return (
     <footer className="bg-brand-700 text-white">
       <div className="container-max py-16">
@@ -71,42 +80,31 @@ export function Footer() {
           </div>
 
           {/* Social Section */}
-          <div>
-            <h5 className="font-heading text-xs font-semibold uppercase tracking-widest text-white/60">
-              Connect
-            </h5>
+          {socialLinks.length > 0 ? (
+            <div>
+              <h5 className="font-heading text-xs font-semibold uppercase tracking-widest text-white/60">
+                Connect
+              </h5>
 
-            <div className="mt-6 flex items-center gap-4">
-
-              <a
-                href={SOCIAL_LINKS.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
-              >
-                <Linkedin className="h-4 w-4 text-white" />
-              </a>
-
-              <a
-                href={SOCIAL_LINKS.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
-              >
-                <Instagram className="h-4 w-4 text-white" />
-              </a>
-
-              <a
-                href={SOCIAL_LINKS.x}
-                target="_blank"
-                rel="noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
-              >
-                <Twitter className="h-4 w-4 text-white" />
-              </a>
-
+              <div className="mt-6 flex items-center gap-4">
+                {socialLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={link.label}
+                      className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
+                    >
+                      <Icon className="h-4 w-4 text-white" />
+                    </a>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
 
         {/* Bottom Bar */}

@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { createServerSupabase, createServiceRoleSupabase } from "@/lib/supabase/server";
 import { resend } from "@/lib/resend";
 import { bookingStatusUpdatedTemplate } from "@/lib/resend/status-template";
+import { logAuditEvent } from "@/lib/audit";
+import { requireEditorSession } from "@/lib/admin-auth";
 import type { Database } from "@/types/supabase";
 
 type Booking = Database["public"]["Tables"]["bookings"]["Row"];
@@ -36,6 +38,13 @@ export async function logoutAdmin() {
 }
 
 export async function updateBookingStatus(formData: FormData) {
+  let session;
+  try {
+    session = await requireEditorSession();
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Not authorized." };
+  }
+
   const id = String(formData.get("id") || "");
   const status = String(formData.get("status") || "");
 
@@ -80,6 +89,14 @@ export async function updateBookingStatus(formData: FormData) {
       }),
     }),
   ]);
+
+  await logAuditEvent({
+    actorEmail: session.user.email!,
+    action: "update_status",
+    entityType: "booking",
+    entityId: id,
+    metadata: { status },
+  });
 
   revalidatePath("/admin");
   revalidatePath("/admin/bookings");

@@ -15,12 +15,10 @@ type Props = {
 export async function generateStaticParams() {
   try {
     const dbServices = await getPublishedServices();
-    if (dbServices.length > 0) {
-      return dbServices.map((service) => ({ slug: service.slug }));
-    }
-  } catch {}
-
-  return SERVICES.map((service) => ({ slug: service.slug }));
+    return dbServices.map((service) => ({ slug: service.slug }));
+  } catch {
+    return SERVICES.map((service) => ({ slug: service.slug }));
+  }
 }
 
 export async function generateMetadata({ params }: Props) {

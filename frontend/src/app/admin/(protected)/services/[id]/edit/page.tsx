@@ -3,12 +3,14 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { ManagedServiceForm } from "@/components/admin/managed-service-form";
 import { getManagedServiceById } from "@/lib/cms/services";
+import { requireEditorPage } from "@/lib/admin-auth";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
 export default async function EditManagedServicePage({ params }: Props) {
+  await requireEditorPage("/admin/services");
   const { id } = await params;
   const service = await getManagedServiceById(id);
 

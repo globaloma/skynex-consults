@@ -1,8 +1,11 @@
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { BlogForm } from "@/components/admin/blog-form";
+import { requireEditorPage } from "@/lib/admin-auth";
 
-export default function NewBlogPostPage() {
+export default async function NewBlogPostPage() {
+  await requireEditorPage("/admin/blog");
+
   return (
     <div>
       <AdminHeader

@@ -1,21 +1,13 @@
 import { AdminHeader } from "@/components/admin/admin-header";
 import { AnalyticsCards } from "@/components/admin/analytics-cards";
-import { createServiceRoleSupabase } from "@/lib/supabase/server";
+import { BookingsTrendChart } from "@/components/admin/bookings-trend-chart";
+import { BookingStatusChart } from "@/components/admin/booking-status-chart";
+import { RecentActivity } from "@/components/admin/recent-activity";
+import { QuickActions } from "@/components/admin/quick-actions";
+import { getDashboardData } from "@/lib/cms/dashboard";
 
 export default async function AdminDashboardPage() {
-  const supabase = createServiceRoleSupabase();
-
-  const [
-    { count: bookingsCount },
-    { count: contactsCount },
-    { count: publishedPosts },
-    { count: publishedServices },
-  ] = await Promise.all([
-    supabase.from("bookings").select("*", { count: "exact", head: true }),
-    supabase.from("contact_messages").select("*", { count: "exact", head: true }),
-    supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("published", true),
-    supabase.from("managed_services").select("*", { count: "exact", head: true }).eq("published", true),
-  ]);
+  const data = await getDashboardData();
 
   return (
     <div>
@@ -24,12 +16,26 @@ export default async function AdminDashboardPage() {
         description="Overview of leads, content, and published assets."
       />
 
-      <div className="p-6">
+      <div className="grid gap-6 p-6">
         <AnalyticsCards
-          bookingsCount={bookingsCount || 0}
-          contactsCount={contactsCount || 0}
-          publishedPosts={publishedPosts || 0}
-          publishedServices={publishedServices || 0}
+          bookingsCount={data.bookingsCount}
+          contactsCount={data.contactsCount}
+          publishedPosts={data.publishedPosts}
+          publishedServices={data.publishedServices}
+          bookingsTrend={data.bookingsTrend}
+          contactsTrend={data.contactsTrend}
+        />
+
+        <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+          <BookingsTrendChart data={data.bookingsByDay} />
+          <BookingStatusChart data={data.bookingStatusBreakdown} />
+        </div>
+
+        <QuickActions />
+
+        <RecentActivity
+          recentBookings={data.recentBookings}
+          recentContacts={data.recentContacts}
         />
       </div>
     </div>

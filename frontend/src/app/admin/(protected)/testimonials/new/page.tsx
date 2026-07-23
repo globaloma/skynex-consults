@@ -1,8 +1,11 @@
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { TestimonialForm } from "@/components/admin/testimonial-form";
+import { requireEditorPage } from "@/lib/admin-auth";
 
-export default function NewTestimonialPage() {
+export default async function NewTestimonialPage() {
+  await requireEditorPage("/admin/testimonials");
+
   return (
     <div>
       <AdminHeader

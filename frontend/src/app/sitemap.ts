@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_CONFIG, SERVICES } from "@/lib/constants";
 import { getPaginatedPublishedBlogPosts } from "@/lib/cms/queries";
+import { getPublishedServices } from "@/lib/cms/services";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
@@ -8,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/about",
     "/services",
     "/booking",
+    "/packages",
     "/contact",
     "/insights",
     "/privacy-policy",
@@ -18,7 +20,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === "" ? 1 : 0.8,
   }));
 
-  const serviceRoutes = SERVICES.map((service) => ({
+  let services: { slug: string }[];
+  try {
+    services = await getPublishedServices();
+  } catch {
+    services = SERVICES;
+  }
+
+  const serviceRoutes = services.map((service) => ({
     url: `${SITE_CONFIG.url}/services/${service.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
