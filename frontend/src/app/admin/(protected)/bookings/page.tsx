@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { canEditContent } from "@/lib/admin-auth";
 import { getPaginatedBookings } from "@/lib/cms/queries";
+import { MobileRecordCard, MobileRecordRow } from "@/components/admin/mobile-record-card";
 
 type Props = {
   searchParams: Promise<{ status?: string; search?: string; page?: string }>;
@@ -49,49 +50,78 @@ export default async function AdminBookingsPage({ searchParams }: Props) {
           />
         </div>
 
-        <Card>
-          <CardContent>
-            {!bookings || bookings.length === 0 ? (
+        {!bookings || bookings.length === 0 ? (
+          <Card>
+            <CardContent>
               <TableEmpty
                 title="No bookings found"
                 description="Try a different search or status filter."
               />
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[1100px] text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-borderSoft">
-                      <th className="pb-3 font-medium text-text-muted">Name</th>
-                      <th className="pb-3 font-medium text-text-muted">Email</th>
-                      <th className="pb-3 font-medium text-text-muted">Service</th>
-                      <th className="pb-3 font-medium text-text-muted">Date</th>
-                      <th className="pb-3 font-medium text-text-muted">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bookings.map((booking) => (
-                      <tr key={booking.id} className="border-b border-borderSoft">
-                        <td className="py-4 text-text-primary">{booking.full_name}</td>
-                        <td className="py-4 text-text-body">{booking.email}</td>
-                        <td className="py-4 text-text-body">{booking.service_interest}</td>
-                        <td className="py-4 text-text-body">
-                          {formatDate(booking.preferred_date)}
-                        </td>
-                        <td className="py-4">
-                          <BookingStatusForm
-                            id={booking.id}
-                            currentStatus={booking.status || "new"}
-                            canEdit={canEdit}
-                          />
-                        </td>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <div className="grid gap-4 md:hidden">
+              {bookings.map((booking) => (
+                <MobileRecordCard
+                  key={booking.id}
+                  title={booking.full_name}
+                  badge={
+                    <BookingStatusForm
+                      id={booking.id}
+                      currentStatus={booking.status || "new"}
+                      canEdit={canEdit}
+                    />
+                  }
+                >
+                  <MobileRecordRow label="Email" value={booking.email} />
+                  <MobileRecordRow label="Service" value={booking.service_interest} />
+                  <MobileRecordRow
+                    label="Date"
+                    value={formatDate(booking.preferred_date)}
+                  />
+                </MobileRecordCard>
+              ))}
+            </div>
+
+            <Card className="hidden md:block">
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[1100px] text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-borderSoft">
+                        <th className="pb-3 font-medium text-text-muted">Name</th>
+                        <th className="pb-3 font-medium text-text-muted">Email</th>
+                        <th className="pb-3 font-medium text-text-muted">Service</th>
+                        <th className="pb-3 font-medium text-text-muted">Date</th>
+                        <th className="pb-3 font-medium text-text-muted">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                    </thead>
+                    <tbody>
+                      {bookings.map((booking) => (
+                        <tr key={booking.id} className="border-b border-borderSoft">
+                          <td className="py-4 text-text-primary">{booking.full_name}</td>
+                          <td className="py-4 text-text-body">{booking.email}</td>
+                          <td className="py-4 text-text-body">{booking.service_interest}</td>
+                          <td className="py-4 text-text-body">
+                            {formatDate(booking.preferred_date)}
+                          </td>
+                          <td className="py-4">
+                            <BookingStatusForm
+                              id={booking.id}
+                              currentStatus={booking.status || "new"}
+                              canEdit={canEdit}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
 
         <PaginationControls
           currentPage={currentPage}

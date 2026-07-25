@@ -8,6 +8,7 @@ import { PaginationControls } from "@/components/shared/pagination-controls";
 import { ContactArchiveToggle } from "@/components/admin/contact-archive-toggle";
 import { getPaginatedContactMessages } from "@/lib/cms/queries";
 import { canEditContent } from "@/lib/admin-auth";
+import { MobileRecordCard, MobileRecordRow } from "@/components/admin/mobile-record-card";
 import type { Database } from "@/types/supabase";
 
 type ContactMessage = Database["public"]["Tables"]["contact_messages"]["Row"];
@@ -99,65 +100,104 @@ export default async function AdminContactsPage({ searchParams }: Props) {
           />
         </div>
 
-        <Card>
-          <CardContent>
-            {!contacts || contacts.length === 0 ? (
+        {!contacts || contacts.length === 0 ? (
+          <Card>
+            <CardContent>
               <TableEmpty
                 title="No contact messages found"
                 description="Try a different search or view."
               />
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[1000px] text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-borderSoft">
-                      <th className="pb-3 font-medium text-text-muted">Name</th>
-                      <th className="pb-3 font-medium text-text-muted">Email</th>
-                      <th className="pb-3 font-medium text-text-muted">Phone</th>
-                      <th className="pb-3 font-medium text-text-muted">Message</th>
-                      <th className="pb-3 font-medium text-text-muted">Date</th>
-                      <th className="pb-3 font-medium text-text-muted">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {contacts.map((contact) => (
-                      <tr key={contact.id} className="border-b border-borderSoft align-top">
-                        <td className="py-4 text-text-primary">{contact.name}</td>
-                        <td className="py-4 text-text-body">{contact.email}</td>
-                        <td className="py-4 text-text-body">{contact.phone}</td>
-                        <td className="py-4 max-w-xs text-text-body">
-                          <p className="line-clamp-3">{contact.message}</p>
-                        </td>
-                        <td className="py-4 text-text-body">
-                          {formatDate(contact.created_at)}
-                        </td>
-                        <td className="py-4">
-                          <div className="flex flex-wrap gap-2">
-                            <a
-                              href={`mailto:${contact.email}?subject=${encodeURIComponent(
-                                "Re: Your message to Skynex Consults"
-                              )}`}
-                              className="rounded-xl border border-borderSoft px-4 py-2 text-sm text-text-body hover:bg-brand-50"
-                            >
-                              Reply
-                            </a>
-                            {archiveSupported ? (
-                              <ContactArchiveToggle
-                                id={contact.id}
-                                archived={Boolean(contact.archived)}
-                                canEdit={canEdit}
-                              />
-                            ) : null}
-                          </div>
-                        </td>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <div className="grid gap-4 md:hidden">
+              {contacts.map((contact) => (
+                <MobileRecordCard
+                  key={contact.id}
+                  title={contact.name}
+                  actions={
+                    <>
+                      <a
+                        href={`mailto:${contact.email}?subject=${encodeURIComponent(
+                          "Re: Your message to Skynex Consults"
+                        )}`}
+                        className="rounded-xl border border-borderSoft px-4 py-2 text-sm text-text-body hover:bg-brand-50"
+                      >
+                        Reply
+                      </a>
+                      {archiveSupported ? (
+                        <ContactArchiveToggle
+                          id={contact.id}
+                          archived={Boolean(contact.archived)}
+                          canEdit={canEdit}
+                        />
+                      ) : null}
+                    </>
+                  }
+                >
+                  <MobileRecordRow label="Email" value={contact.email} />
+                  <MobileRecordRow label="Phone" value={contact.phone || "—"} />
+                  <MobileRecordRow label="Date" value={formatDate(contact.created_at)} />
+                  <p className="pt-2 text-sm leading-6 text-text-body">{contact.message}</p>
+                </MobileRecordCard>
+              ))}
+            </div>
+
+            <Card className="hidden md:block">
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[1000px] text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-borderSoft">
+                        <th className="pb-3 font-medium text-text-muted">Name</th>
+                        <th className="pb-3 font-medium text-text-muted">Email</th>
+                        <th className="pb-3 font-medium text-text-muted">Phone</th>
+                        <th className="pb-3 font-medium text-text-muted">Message</th>
+                        <th className="pb-3 font-medium text-text-muted">Date</th>
+                        <th className="pb-3 font-medium text-text-muted">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                    </thead>
+                    <tbody>
+                      {contacts.map((contact) => (
+                        <tr key={contact.id} className="border-b border-borderSoft align-top">
+                          <td className="py-4 text-text-primary">{contact.name}</td>
+                          <td className="py-4 text-text-body">{contact.email}</td>
+                          <td className="py-4 text-text-body">{contact.phone}</td>
+                          <td className="py-4 max-w-xs text-text-body">
+                            <p className="line-clamp-3">{contact.message}</p>
+                          </td>
+                          <td className="py-4 text-text-body">
+                            {formatDate(contact.created_at)}
+                          </td>
+                          <td className="py-4">
+                            <div className="flex flex-wrap gap-2">
+                              <a
+                                href={`mailto:${contact.email}?subject=${encodeURIComponent(
+                                  "Re: Your message to Skynex Consults"
+                                )}`}
+                                className="rounded-xl border border-borderSoft px-4 py-2 text-sm text-text-body hover:bg-brand-50"
+                              >
+                                Reply
+                              </a>
+                              {archiveSupported ? (
+                                <ContactArchiveToggle
+                                  id={contact.id}
+                                  archived={Boolean(contact.archived)}
+                                  canEdit={canEdit}
+                                />
+                              ) : null}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
 
         <PaginationControls
           currentPage={currentPage}

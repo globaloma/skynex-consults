@@ -8,6 +8,8 @@ import { PublishToggleForm } from "@/components/admin/publish-toggle-form";
 import { DeleteItemForm } from "@/components/admin/delete-item-form";
 import { deleteBlogPost } from "@/app/admin/cms-actions";
 import { canEditContent } from "@/lib/admin-auth";
+import { MobileRecordCard, MobileRecordRow } from "@/components/admin/mobile-record-card";
+import { StatusBadge } from "@/components/admin/status-badge";
 
 export default async function AdminBlogPage() {
   const [posts, canEdit] = await Promise.all([getManagedBlogPosts(), canEditContent()]);
@@ -28,70 +30,98 @@ export default async function AdminBlogPage() {
           </div>
         ) : null}
 
-        <Card>
-          <CardContent>
-            {posts.length === 0 ? (
+        {posts.length === 0 ? (
+          <Card>
+            <CardContent>
               <TableEmpty
                 title="No blog posts yet"
                 description="Create your first insight article to get started."
               />
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[980px] text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-borderSoft">
-                      <th className="pb-3 font-medium text-text-muted">Title</th>
-                      <th className="pb-3 font-medium text-text-muted">Category</th>
-                      <th className="pb-3 font-medium text-text-muted">Status</th>
-                      <th className="pb-3 font-medium text-text-muted">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {posts.map((post) => (
-                      <tr key={post.id} className="border-b border-borderSoft">
-                        <td className="py-4 text-text-primary">{post.title}</td>
-                        <td className="py-4 text-text-body">{post.category}</td>
-                        <td className="py-4">
-                          <span
-                            className={`rounded-full px-3 py-1 text-xs ${
-                              post.published
-                                ? "bg-brand-50 text-brand-700"
-                                : "bg-gray-100 text-gray-700"
-                            }`}
-                          >
-                            {post.published ? "Published" : "Draft"}
-                          </span>
-                        </td>
-                        <td className="py-4">
-                          <div className="flex gap-2">
-                            {canEdit ? (
-                              <Link href={`/admin/blog/${post.id}/edit`}>
-                                <Button variant="secondary" size="sm">
-                                  Edit
-                                </Button>
-                              </Link>
-                            ) : null}
-                            <PublishToggleForm
-                              id={post.id}
-                              table="blog_posts"
-                              published={post.published}
-                              canEdit={canEdit}
-                            />
-                            <DeleteItemForm
-                              id={post.id}
-                              action={deleteBlogPost}
-                              canEdit={canEdit}
-                            />
-                          </div>
-                        </td>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <div className="grid gap-4 md:hidden">
+              {posts.map((post) => (
+                <MobileRecordCard
+                  key={post.id}
+                  title={post.title}
+                  badge={<StatusBadge published={post.published} />}
+                  actions={
+                    <>
+                      {canEdit ? (
+                        <Link href={`/admin/blog/${post.id}/edit`}>
+                          <Button variant="secondary" size="sm">
+                            Edit
+                          </Button>
+                        </Link>
+                      ) : null}
+                      <PublishToggleForm
+                        id={post.id}
+                        table="blog_posts"
+                        published={post.published}
+                        canEdit={canEdit}
+                      />
+                      <DeleteItemForm id={post.id} action={deleteBlogPost} canEdit={canEdit} />
+                    </>
+                  }
+                >
+                  <MobileRecordRow label="Category" value={post.category} />
+                </MobileRecordCard>
+              ))}
+            </div>
+
+            <Card className="hidden md:block">
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[980px] text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-borderSoft">
+                        <th className="pb-3 font-medium text-text-muted">Title</th>
+                        <th className="pb-3 font-medium text-text-muted">Category</th>
+                        <th className="pb-3 font-medium text-text-muted">Status</th>
+                        <th className="pb-3 font-medium text-text-muted">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                    </thead>
+                    <tbody>
+                      {posts.map((post) => (
+                        <tr key={post.id} className="border-b border-borderSoft">
+                          <td className="py-4 text-text-primary">{post.title}</td>
+                          <td className="py-4 text-text-body">{post.category}</td>
+                          <td className="py-4">
+                            <StatusBadge published={post.published} />
+                          </td>
+                          <td className="py-4">
+                            <div className="flex gap-2">
+                              {canEdit ? (
+                                <Link href={`/admin/blog/${post.id}/edit`}>
+                                  <Button variant="secondary" size="sm">
+                                    Edit
+                                  </Button>
+                                </Link>
+                              ) : null}
+                              <PublishToggleForm
+                                id={post.id}
+                                table="blog_posts"
+                                published={post.published}
+                                canEdit={canEdit}
+                              />
+                              <DeleteItemForm
+                                id={post.id}
+                                action={deleteBlogPost}
+                                canEdit={canEdit}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </div>
   );

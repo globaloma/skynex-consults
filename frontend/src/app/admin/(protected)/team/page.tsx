@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getAdminUsers } from "@/lib/cms/admin-users";
 import { requireAdminRole } from "@/lib/admin-auth";
 import { TeamInviteForm } from "@/components/admin/team-invite-form";
-import { TeamMemberRow } from "@/components/admin/team-member-row";
+import { TeamMemberRow, TeamMemberCard } from "@/components/admin/team-member-row";
 
 export default async function AdminTeamPage() {
   const currentAdmin = await requireAdminRole();
@@ -30,7 +30,20 @@ export default async function AdminTeamPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <div className="grid gap-4 md:hidden">
+          {members.map((member) => (
+            <TeamMemberCard
+              key={member.id}
+              id={member.id}
+              email={member.email}
+              role={member.role}
+              createdAt={member.created_at}
+              isSelf={member.email === currentAdmin.email}
+            />
+          ))}
+        </div>
+
+        <Card className="hidden md:block">
           <CardContent>
             <p className="text-sm font-medium text-text-primary">Team members</p>
             <div className="mt-4 overflow-x-auto">

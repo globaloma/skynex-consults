@@ -4,20 +4,17 @@ import { useTransition } from "react";
 import { updateAdminRole, removeAdmin } from "@/app/admin/team-actions";
 import { toast } from "@/components/ui/sonner";
 import { formatDate } from "@/lib/utils";
+import { MobileRecordCard, MobileRecordRow } from "@/components/admin/mobile-record-card";
 
-export function TeamMemberRow({
-  id,
-  email,
-  role,
-  createdAt,
-  isSelf,
-}: {
+type TeamMemberProps = {
   id: string;
   email: string;
   role: string;
   createdAt: string;
   isSelf: boolean;
-}) {
+};
+
+function useTeamMemberActions({ id, email }: Pick<TeamMemberProps, "id" | "email">) {
   const [pending, startTransition] = useTransition();
 
   const changeRole = (nextRole: string) => {
@@ -53,6 +50,12 @@ export function TeamMemberRow({
     });
   };
 
+  return { pending, changeRole, remove };
+}
+
+export function TeamMemberRow({ id, email, role, createdAt, isSelf }: TeamMemberProps) {
+  const { pending, changeRole, remove } = useTeamMemberActions({ id, email });
+
   return (
     <tr className="border-b border-borderSoft">
       <td className="py-4 text-text-primary">
@@ -81,5 +84,45 @@ export function TeamMemberRow({
         </button>
       </td>
     </tr>
+  );
+}
+
+export function TeamMemberCard({ id, email, role, createdAt, isSelf }: TeamMemberProps) {
+  const { pending, changeRole, remove } = useTeamMemberActions({ id, email });
+
+  return (
+    <MobileRecordCard
+      title={
+        <>
+          {email}
+          {isSelf ? <span className="ml-2 text-xs text-text-muted">(you)</span> : null}
+        </>
+      }
+      actions={
+        <button
+          onClick={remove}
+          disabled={pending || isSelf}
+          className="rounded-xl border border-red-200 px-4 py-2 text-sm text-red-700 hover:bg-red-50 disabled:opacity-60"
+        >
+          Remove
+        </button>
+      }
+    >
+      <MobileRecordRow label="Added" value={formatDate(createdAt)} />
+      <MobileRecordRow
+        label="Role"
+        value={
+          <select
+            value={role}
+            disabled={pending || isSelf}
+            onChange={(e) => changeRole(e.target.value)}
+            className="h-9 rounded-lg border border-borderSoft bg-white px-2 text-sm capitalize outline-none focus:border-brand-500 disabled:opacity-60"
+          >
+            <option value="admin">Admin</option>
+            <option value="viewer">Viewer</option>
+          </select>
+        }
+      />
+    </MobileRecordCard>
   );
 }

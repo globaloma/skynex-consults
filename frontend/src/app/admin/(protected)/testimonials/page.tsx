@@ -9,6 +9,8 @@ import { DeleteItemForm } from "@/components/admin/delete-item-form";
 import { deleteTestimonial } from "@/app/admin/cms-actions";
 import { Database } from "@/types/supabase";
 import { canEditContent } from "@/lib/admin-auth";
+import { MobileRecordCard } from "@/components/admin/mobile-record-card";
+import { StatusBadge } from "@/components/admin/status-badge";
 
 type Testimonial = Database["public"]["Tables"]["testimonials"]["Row"];
 
@@ -34,68 +36,98 @@ export default async function AdminTestimonialsPage() {
           </div>
         ) : null}
 
-        <Card>
-          <CardContent>
-            {testimonials.length === 0 ? (
+        {testimonials.length === 0 ? (
+          <Card>
+            <CardContent>
               <TableEmpty
                 title="No testimonials yet"
                 description="Add testimonials to strengthen social proof on the website."
               />
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[900px] text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-borderSoft">
-                      <th className="pb-3 font-medium text-text-muted">Name</th>
-                      <th className="pb-3 font-medium text-text-muted">Status</th>
-                      <th className="pb-3 font-medium text-text-muted">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {testimonials.map((item) => (
-                      <tr key={item.id} className="border-b border-borderSoft">
-                        <td className="py-4 text-text-primary">{item.name}</td>
-                        <td className="py-4">
-                          <span
-                            className={`rounded-full px-3 py-1 text-xs ${
-                              item.published
-                                ? "bg-brand-50 text-brand-700"
-                                : "bg-gray-100 text-gray-700"
-                            }`}
-                          >
-                            {item.published ? "Published" : "Draft"}
-                          </span>
-                        </td>
-                        <td className="py-4">
-                          <div className="flex gap-2">
-                            {canEdit ? (
-                              <Link href={`/admin/testimonials/${item.id}/edit`}>
-                                <Button variant="secondary" size="sm">
-                                  Edit
-                                </Button>
-                              </Link>
-                            ) : null}
-                            <PublishToggleForm
-                              id={item.id}
-                              table="testimonials"
-                              published={item.published}
-                              canEdit={canEdit}
-                            />
-                            <DeleteItemForm
-                              id={item.id}
-                              action={deleteTestimonial}
-                              canEdit={canEdit}
-                            />
-                          </div>
-                        </td>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            <div className="grid gap-4 md:hidden">
+              {testimonials.map((item) => (
+                <MobileRecordCard
+                  key={item.id}
+                  title={item.name}
+                  badge={<StatusBadge published={item.published} />}
+                  actions={
+                    <>
+                      {canEdit ? (
+                        <Link href={`/admin/testimonials/${item.id}/edit`}>
+                          <Button variant="secondary" size="sm">
+                            Edit
+                          </Button>
+                        </Link>
+                      ) : null}
+                      <PublishToggleForm
+                        id={item.id}
+                        table="testimonials"
+                        published={item.published}
+                        canEdit={canEdit}
+                      />
+                      <DeleteItemForm
+                        id={item.id}
+                        action={deleteTestimonial}
+                        canEdit={canEdit}
+                      />
+                    </>
+                  }
+                />
+              ))}
+            </div>
+
+            <Card className="hidden md:block">
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[900px] text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-borderSoft">
+                        <th className="pb-3 font-medium text-text-muted">Name</th>
+                        <th className="pb-3 font-medium text-text-muted">Status</th>
+                        <th className="pb-3 font-medium text-text-muted">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                    </thead>
+                    <tbody>
+                      {testimonials.map((item) => (
+                        <tr key={item.id} className="border-b border-borderSoft">
+                          <td className="py-4 text-text-primary">{item.name}</td>
+                          <td className="py-4">
+                            <StatusBadge published={item.published} />
+                          </td>
+                          <td className="py-4">
+                            <div className="flex gap-2">
+                              {canEdit ? (
+                                <Link href={`/admin/testimonials/${item.id}/edit`}>
+                                  <Button variant="secondary" size="sm">
+                                    Edit
+                                  </Button>
+                                </Link>
+                              ) : null}
+                              <PublishToggleForm
+                                id={item.id}
+                                table="testimonials"
+                                published={item.published}
+                                canEdit={canEdit}
+                              />
+                              <DeleteItemForm
+                                id={item.id}
+                                action={deleteTestimonial}
+                                canEdit={canEdit}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </div>
   );
