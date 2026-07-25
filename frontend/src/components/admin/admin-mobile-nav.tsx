@@ -140,6 +140,7 @@ export function AdminMobileNav() {
                       >
                         <Link
                           href={link.href}
+                          onClick={() => setOpen(false)}
                           className={cn(
                             "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition",
                             active
